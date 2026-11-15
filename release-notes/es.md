@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 1.13.10 - 2026-11-15
+
 - En Menú, marca una comida como **Fuera** cuando comes fuera: cuenta como planificada y no añade nada a la compra.
 - En Recetas, el número del filtro elegido se lee bien: tiene el mismo color que su nombre.
 

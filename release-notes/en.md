@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 1.13.10 - 2026-11-15
+
 - In Menu, mark a meal as **Eating out** when you eat out: it counts as planned and adds nothing to the shopping.
 - In Recipes, the number on the chosen filter is easy to read: it has the same color as its name.
 

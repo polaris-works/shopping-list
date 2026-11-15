@@ -10,6 +10,10 @@ no change has no entry.
 
 ## Unreleased
 
+No change.
+
+## 1.13.10 - 2026-11-15
+
 - MENU-28: a meal can be outside, a menu entry `{ week, day, meal, out: true }` with no `recipe`
   and no `dish` (`setOut` of `src/menu.js`; DATA-13). It counts as planned (MENU-10, MENU-26),
   `Llenar cesta` skips it, a repeat copies it, `menuDishes` and `pastWeeks` give no name for it;

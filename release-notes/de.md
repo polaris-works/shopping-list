@@ -4,6 +4,10 @@ Was sich für dich in jeder Version der App ändert. Die neueste Version steht o
 
 ## Unreleased
 
+No change.
+
+## 1.13.10 - 2026-11-15
+
 - Im Menü markierst du eine Mahlzeit als **Auswärts**, wenn du auswärts isst: Sie zählt als geplant und fügt nichts zum Einkauf hinzu.
 - In Rezepte ist die Zahl am gewählten Filter gut lesbar: Sie hat dieselbe Farbe wie sein Name.
 
