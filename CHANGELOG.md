@@ -16,7 +16,8 @@ no change has no entry.
   storage drops an entry with `out` and also a `recipe` or a `dish`. The meal sheet has **Fuera**
   (`menu.out`, tonal, `aria-pressed`) before **Quitar**; **Crear receta** of a dish takes its own
   row (MENU-19). The slot shows `Fuera`, the icon `log-out` and `Sin compra` (`menu.statusOut`,
-  MENU-25, MENU-26), drawn as a dish.
+  MENU-25, MENU-26), drawn as a dish. A device on 1.13.9 or before drops an outside meal at its
+  validation, and its sync deletes it on the server.
 - REC-40: the count of a pressed `chip` is in `--on-ink`, as its label (`--muted` on the `--ink`
   fill was 1.83:1 light, 1.51:1 dark; now 17.11:1 and 15.10:1). Shell cache `shopping-shell-v56`.
 
