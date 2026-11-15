@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import {
   setMeal,
   setDish,
+  setOut,
   clearMeal,
   clearMenu,
   mealCount,
@@ -50,6 +51,9 @@ export const defineMenuSteps = ({ Given, When, Then }) => {
   Given('the {word} of {word} in the week {string} is the dish {string}', (world, meal, day, week, dish) => {
     put(world, setDish(world.state, week, dayOf(day), meal, dish));
   });
+  Given('the {word} of {word} in the week {string} is outside', (world, meal, day, week) => {
+    put(world, setOut(world.state, week, dayOf(day), meal));
+  });
   Given('the shared list has the {word} of {word} in the week {string} as the recipe {string}', (world, meal, day, week, name) => {
     const { own, shared } = split(world.state, world.shared.base, world.shared.scope);
     const recipe = shared.recipes.find((candidate) => candidate.name === name);
@@ -63,6 +67,9 @@ export const defineMenuSteps = ({ Given, When, Then }) => {
   When('I put the recipe {string} in the {word} of {word} in the week {string}', (world, name, meal, day, week) => {
     const id = recipeId(world, name);
     apply(world, (state) => setMeal(state, week, dayOf(day), meal, id));
+  });
+  When('I mark the {word} of {word} in the week {string} as outside', (world, meal, day, week) => {
+    apply(world, (state) => setOut(state, week, dayOf(day), meal));
   });
   When('I put the dish {string} in the {word} of {word} in the week {string}', (world, dish, meal, day, week) => {
     apply(world, (state) => setDish(state, week, dayOf(day), meal, dish));
@@ -118,6 +125,14 @@ export const defineMenuSteps = ({ Given, When, Then }) => {
   Then('the {word} list has {int} meal(s) in the week {string}', (world, which, count, week) => {
     const part = split(world.state, world.shared.base, world.shared.scope)[which];
     assert.equal(mealCount(part, week), count);
+  });
+  // MENU-28: the entry of that meal is outside, or it is not.
+  const outEntry = (world, meal, day, week) => world.state.menu.find((entry) => entry.week === week && entry.day === dayOf(day) && entry.meal === meal);
+  Then('the {word} of {word} in the week {string} holds outside', (world, meal, day, week) => {
+    assert.equal(outEntry(world, meal, day, week)?.out, true);
+  });
+  Then('the {word} of {word} in the week {string} does not hold outside', (world, meal, day, week) => {
+    assert.notEqual(outEntry(world, meal, day, week)?.out, true);
   });
   Then('the repeat copied {int} meal(s)', (world, count) => {
     assert.equal(world.result.error, undefined);

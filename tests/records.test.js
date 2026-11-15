@@ -41,6 +41,13 @@ test('fromRecords of toRecords returns the same state', () => {
   assert.deepEqual(normalizeState(fromRecords(toRecords(state))), state);
 });
 
+test('an outside meal goes through the records as out: true (MENU-28)', () => {
+  const state = normalizeState({ ...sample(), menu: [{ week: W, day: 2, meal: 'dinner', out: true }] });
+  const records = toRecords(state);
+  assert.deepEqual(records.get('meal:2026-11-02-2-dinner').data, { out: true });
+  assert.deepEqual(normalizeState(fromRecords(records)), state);
+});
+
 test('fromRecords orders items and recipes by position', () => {
   const records = toRecords({ ...sample(), recipes: [recipe('r1', 'Sopa'), recipe('r2', 'Tarta')] });
   records.get('item:a').data.position = 5;

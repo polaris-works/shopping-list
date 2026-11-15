@@ -668,6 +668,23 @@ test('importJson keeps a dish of the menu and drops a bad one', () => {
   ]);
 });
 
+test('normalizeState keeps an outside meal (MENU-28)', () => {
+  const menu = [{ week: W, day: 1, meal: 'lunch', out: true }];
+  assert.deepEqual(normalizeState({ ...sample(), menu }).menu, menu);
+});
+
+test('normalizeState drops an outside meal that also has a recipe or a dish, and an out that is not true', () => {
+  const menu = [
+    { week: W, day: 1, meal: 'lunch', out: true, recipe: 'r1' },
+    { week: W, day: 1, meal: 'dinner', out: true, dish: 'Pizza' },
+    { week: W, day: 2, meal: 'lunch', out: 'yes' },
+    { week: W, day: 2, meal: 'dinner', out: false },
+    { week: W, day: 3, meal: 'lunch', out: false, recipe: 'r1' },
+    { week: W, day: 9, meal: 'lunch', out: true },
+  ];
+  assert.deepEqual(normalizeState({ ...sample(), menu }).menu, []);
+});
+
 test('load reads a version 8 state and keeps its menu', () => {
   const v8 = { ...sample(), version: 8 };
   assert.deepEqual(load(fakeStorage({ [STORAGE_KEY]: JSON.stringify(v8) })), sample());

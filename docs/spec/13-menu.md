@@ -12,7 +12,7 @@ past weeks stay, read only, and the next weeks can be planned ahead.
   with no meal, with no tap and with no write of the state. Each operation of the menu acts on
   one week, on the screen the week in view (MENU-23); a week that is not a Monday gives
   `error.unknownMeal`.
-- **MENU-2** A meal holds one recipe, one dish or nothing. A dish is a name with no recipe. A
+- **MENU-2** A meal holds one recipe, one dish, outside (MENU-28) or nothing. A dish is a name with no recipe. A
   recipe or a dish can be in more than one meal.
 - **MENU-3** A recipe or a dish put in a meal replaces the recipe or the dish that the meal had. A
   recipe that does not exist gives `error.recipeNotFound`; a dish with an empty name gives
@@ -20,12 +20,18 @@ past weeks stay, read only, and the next weeks can be planned ahead.
   a dish is trimmed.
 - **MENU-4** A meal can be emptied. **Vaciar menú** empties all the meals, also a meal whose
   recipe does not exist any more (MENU-10).
+- **MENU-28** A meal can be outside: eaten out, so it needs no food. An outside meal is planned
+  (MENU-10, MENU-26), holds no recipe and no dish, and sends nothing to `Compra` (MENU-6). A put of
+  outside replaces the recipe or the dish of the meal, and a put of a recipe or a dish replaces
+  outside (MENU-3). A day or a meal that does not exist gives `error.unknownMeal`. **Quitar** and
+  **Vaciar menú** empty it (MENU-4); **Repetir esta semana** copies it (MENU-24). It is no dish of
+  `Recetas` (REC-36) and no name of **Semanas anteriores** (MENU-27).
 
 ## Fill the basket
 
 - **MENU-5** **Llenar cesta** sends each recipe of the menu to `Compra`, one time, in day
   and meal order of its first meal. Each send follows REC-18 and REC-19.
-- **MENU-6** A dish and a recipe with no product are skipped. A menu with no planned meal (MENU-10) gives
+- **MENU-6** A dish, an outside meal (MENU-28) and a recipe with no product are skipped. A menu with no planned meal (MENU-10) gives
   `error.menuEmpty`. A menu whose meals give no product gives `error.menuNoProducts`.
 - **MENU-7** `añadidos` and `ya estaban` are the sums of the sends (REC-20). A product of two
   recipes counts as added at the first send and as there already at the second.
@@ -56,7 +62,8 @@ past weeks stay, read only, and the next weeks can be planned ahead.
 - **MENU-10** The header shows `Menú` and `N comidas planificadas`, or `Sin comidas
   planificadas`, for the week in view (MENU-23). A meal whose recipe does not exist any more (a
   delete on another device, then a sync) is not planned: `Menú` shows it free, with `Elegir receta`,
-  and no count of the menu holds it (`mealCount` of `src/menu.js`, MENU-6, MENU-13, MENU-26).
+  and no count of the menu holds it (`mealCount` of `src/menu.js`, MENU-6, MENU-13, MENU-26). An
+  outside meal (MENU-28) is planned.
 - **MENU-11** A tap on a meal opens the meal sheet, `Comida del lunes`. It has one chip for each
   recipe, in the order of the recipes; the chip of the recipe of the meal is on. A tap on a chip
   puts that recipe in the meal and closes the sheet. A meal with a recipe or a dish also has
@@ -140,7 +147,7 @@ past weeks stay, read only, and the next weeks can be planned ahead.
 
 - **MENU-24** **Repetir esta semana** is a primary button with the icon `repeat` across the action
   bar of a past week. It puts the meals of that week in place of all the meals of this week, each in
-  its day and meal, with its recipe or its dish, then shows this week, with `Deshacer` and the
+  its day and meal, with its recipe, its dish or outside (MENU-28), then shows this week, with `Deshacer` and the
   message `Semana repetida: N comidas.` For a member with scope `all` each list copies its own past
   week into its own week (MENU-20); a list with no meal in that week keeps its week as it is. A put
   of a meal drops the old weeks as MENU-22 says.

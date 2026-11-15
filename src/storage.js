@@ -112,11 +112,12 @@ const normalizeRecipe = (recipe) => {
 // The longest dish name, the limit of the field of the meal sheet.
 const DISH_LENGTH = 80;
 
-// A meal holds a known recipe or a dish name, never both. A meal with no week, of version 1 to 9 or
-// of an old record, is a meal of the week of `today` (STORE-8).
-const mealOf = ({ week: rawWeek, day, meal, recipe, dish }, known, today) => {
+// A meal holds a known recipe, a dish name or outside (MENU-28), one of them. A meal with no week, of
+// version 1 to 9 or of an old record, is a meal of the week of `today` (STORE-8).
+const mealOf = ({ week: rawWeek, day, meal, recipe, dish, out }, known, today) => {
   const week = rawWeek === undefined ? today : rawWeek;
   if (!isWeek(week) || !Number.isInteger(day) || day < 0 || day >= DAYS || !MEALS.includes(meal)) return null;
+  if (out !== undefined) return out === true && recipe === undefined && dish === undefined ? { week, day, meal, out: true } : null;
   if (dish === undefined) return known.has(recipe) ? { week, day, meal, recipe } : null;
   const name = typeof dish === 'string' ? dish.trim() : '';
   return recipe === undefined && name && name.length <= DISH_LENGTH ? { week, day, meal, dish: name } : null;

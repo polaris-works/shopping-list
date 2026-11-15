@@ -80,7 +80,8 @@ A meal has a `recipe` or a `dish`, never both. A meal with no recipe and no dish
   distinction, at the time of use. A rename of one does not change the other.
 - **DATA-12** A shop has no record. It exists while an item has it.
 - **DATA-13** `menu` has one record for each meal of each week at most, in week, day and meal
-  order. Its `recipe` is the id of a recipe that exists.
+  order. A record holds a `recipe`, a `dish` or `out: true`, one of them. Its `recipe` is the id
+  of a recipe that exists.
 - **DATA-14** The names of `aisles` are trimmed, not empty and unique with no case distinction.
 - **DATA-15** `item.aisle` is `''` or a name of `aisles`, in the spelling of `aisles`. An item has
   one aisle at most. See [17-aisles.md](17-aisles.md).

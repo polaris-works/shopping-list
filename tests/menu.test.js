@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { emptyState, addItem } from '#store';
 import { addRecipe, addRecipeProduct } from '#recipes';
-import { DAYS, MEALS, KEPT_WEEKS, FUTURE_WEEKS, weekSteps, weekOf, addWeeks, weekDay, isWeek, menuWeeks, repeatWeek, setMeal, setDish, dishRecipe, menuDishes, clearMeal, clearMenu, mealCount, plannedSlots, SLOTS, menuWeek, fillMenu, basketPreview, filledRecipes, pastWeeks } from '#menu';
+import { DAYS, MEALS, KEPT_WEEKS, FUTURE_WEEKS, weekSteps, weekOf, addWeeks, weekDay, isWeek, menuWeeks, repeatWeek, setMeal, setDish, setOut, dishRecipe, menuDishes, clearMeal, clearMenu, mealCount, plannedSlots, SLOTS, menuWeek, fillMenu, basketPreview, filledRecipes, pastWeeks } from '#menu';
 
 // The Monday of the week of the tests.
 const W = '2026-11-02';
@@ -240,8 +240,8 @@ test('a dish counts as a planned meal and shows in menuWeek', () => {
   const state = setDish(plan(start, [[2, 'lunch', lentils]]), W, 2, 'dinner', 'Paella').state;
   assert.equal(mealCount(state, W), 2);
   assert.deepEqual(menuWeek(state, W)[2].meals, [
-    { meal: 'lunch', recipe: state.recipes.find((recipe) => recipe.id === lentils), dish: null },
-    { meal: 'dinner', recipe: null, dish: 'Paella' },
+    { meal: 'lunch', recipe: state.recipes.find((recipe) => recipe.id === lentils), dish: null, out: false },
+    { meal: 'dinner', recipe: null, dish: 'Paella', out: false },
   ]);
 });
 
@@ -537,4 +537,68 @@ test('pastWeeks is empty with no past meal', () => {
   const { state, lentils } = kitchen();
   assert.deepEqual(pastWeeks(state, W), []);
   assert.deepEqual(pastWeeks(setMeal(state, W, 0, 'lunch', lentils).state, W), []);
+});
+
+test('setOut puts an outside meal in place of a recipe or a dish (MENU-28)', () => {
+  const { state: start, lentils } = kitchen();
+  const planned = setDish(plan(start, [[0, 'lunch', lentils]]), W, 0, 'dinner', 'Pizza').state;
+  const before = structuredClone(planned);
+  const lunch = setOut(planned, W, 0, 'lunch');
+  assert.equal(lunch.error, undefined);
+  const { state } = setOut(lunch.state, W, 0, 'dinner');
+  assert.deepEqual(state.menu, [
+    { week: W, day: 0, meal: 'lunch', out: true },
+    { week: W, day: 0, meal: 'dinner', out: true },
+  ]);
+  assert.deepEqual(planned, before);
+});
+
+test('setMeal and setDish replace an outside meal (MENU-28)', () => {
+  const { state: start, lentils } = kitchen();
+  const out = setOut(start, W, 0, 'lunch').state;
+  assert.deepEqual(setMeal(out, W, 0, 'lunch', lentils).state.menu, [{ week: W, day: 0, meal: 'lunch', recipe: lentils }]);
+  assert.deepEqual(setDish(out, W, 0, 'lunch', 'Pizza').state.menu, [{ week: W, day: 0, meal: 'lunch', dish: 'Pizza' }]);
+});
+
+test('setOut of an unknown meal or a week not Monday gives error.unknownMeal', () => {
+  for (const [week, day, meal] of [[W, 0, 'brunch'], [W, 7, 'lunch'], [W, -1, 'lunch'], ['2026-11-03', 0, 'lunch']]) {
+    const start = emptyState();
+    const result = setOut(start, week, day, meal);
+    assert.equal(result.error.key, 'error.unknownMeal');
+    assert.equal(result.state, start);
+  }
+});
+
+test('menuWeek gives out true for an outside meal and false for the others', () => {
+  const { state: start, lentils } = kitchen();
+  const state = setOut(plan(start, [[0, 'dinner', lentils]]), W, 0, 'lunch').state;
+  const [monday, tuesday] = menuWeek(state, W);
+  assert.deepEqual(monday.meals.map(({ meal, recipe, dish, out }) => [meal, recipe?.name ?? null, dish, out]), [
+    ['lunch', null, null, true],
+    ['dinner', 'Lentils', null, false],
+  ]);
+  assert.deepEqual(tuesday.meals.map(({ out }) => out), [false, false]);
+});
+
+test('mealCount and plannedSlots count an outside meal; fillMenu skips it (MENU-28)', () => {
+  const start = setOut(emptyState(), W, 0, 'lunch').state;
+  assert.equal(mealCount(start, W), 1);
+  assert.equal(plannedSlots(start, W), 1);
+  assert.equal(fillMenu(start, W, newId).error.key, 'error.menuNoProducts');
+  assert.equal(filledRecipes(start, W), 0);
+  assert.deepEqual(menuDishes(start, W), []);
+  assert.deepEqual(basketPreview(start, W), []);
+});
+
+test('pastWeeks counts an outside meal and lists no name for it (MENU-27, MENU-28)', () => {
+  const state = setOut(emptyState(), W, 0, 'lunch').state;
+  assert.deepEqual(pastWeeks(state, addWeeks(W, 1)), [{ week: W, planned: 1, names: [] }]);
+});
+
+test('repeatWeek copies an outside meal (MENU-24, MENU-28)', () => {
+  const state = setOut(emptyState(), W, 4, 'lunch').state;
+  const next = addWeeks(W, 1);
+  const result = repeatWeek(state, W, next);
+  assert.equal(result.count, 1);
+  assert.deepEqual(result.state.menu.filter((entry) => entry.week === next), [{ week: next, day: 4, meal: 'lunch', out: true }]);
 });

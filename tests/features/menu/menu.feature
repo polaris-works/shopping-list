@@ -1,7 +1,7 @@
 # The menu of the week, docs/spec/13-menu.md. Today is Monday 2026-11-09: this week is "2026-11-09".
 
 Feature: Menu
-  The week has 7 days and 2 meals a day. A meal holds a recipe, a dish or nothing.
+  The week has 7 days and 2 meals a day. A meal holds a recipe, a dish, outside or nothing.
 
   Background:
     Given a recipe "Tortilla" with "Huevos, Patata"
@@ -118,6 +118,66 @@ Feature: Menu
         | week       | day    | meal  | recipe | dish |
         | 2026-05-18 | Monday | lunch |        | Kept |
         | 2026-11-09 | Monday | lunch |        | New  |
+
+
+    @MENU-28 @MENU-3
+    Scenario: Outside replaces what the meal had, and a recipe replaces outside
+      Given the lunch of Monday in the week "2026-11-09" is the recipe "Tortilla"
+      And the dinner of Monday in the week "2026-11-09" is the dish "Pizza"
+      When I mark the lunch of Monday in the week "2026-11-09" as outside
+      And I mark the dinner of Monday in the week "2026-11-09" as outside
+      Then the lunch of Monday in the week "2026-11-09" holds outside
+      And the dinner of Monday in the week "2026-11-09" holds outside
+      When I put the recipe "Flan" in the dinner of Monday in the week "2026-11-09"
+      Then the dinner of Monday in the week "2026-11-09" does not hold outside
+
+    @MENU-28 @MENU-26
+    Scenario: An outside meal is a planned slot
+      Given the lunch of Monday in the week "2026-11-09" is outside
+      And the dinner of Monday in the week "2026-11-09" is the recipe "Tortilla"
+      Then the week "2026-11-09" has 2 planned slots of 14
+
+    @MENU-28 @MENU-6
+    Scenario: The basket skips an outside meal
+      Given the lunch of Monday in the week "2026-11-09" is outside
+      And the dinner of Monday in the week "2026-11-09" is the recipe "Tortilla"
+      Then the week "2026-11-09" fills from 1 recipe
+
+    @MENU-28 @MENU-6
+    Scenario: A week of outside meals only has no product
+      Given the lunch of Monday in the week "2026-11-09" is outside
+      When I fill the basket from the week "2026-11-09"
+      Then the error is "error.menuNoProducts"
+
+    @MENU-28 @MENU-24
+    Scenario: A repeat copies an outside meal
+      Given the lunch of Friday in the week "2026-11-02" is outside
+      When I repeat the week "2026-11-02" into "2026-11-09"
+      Then the repeat copied 1 meal
+      And the lunch of Friday in the week "2026-11-09" holds outside
+
+    @MENU-28 @MENU-4
+    Scenario: Quitar empties an outside meal
+      Given the lunch of Monday in the week "2026-11-09" is outside
+      When I empty the lunch of Monday in the week "2026-11-09"
+      Then the week "2026-11-09" has 0 meals
+
+    @MENU-28 @MENU-1
+    Scenario: Outside in an unknown meal gives error.unknownMeal
+      When I mark the brunch of Monday in the week "2026-11-09" as outside
+      Then the error is "error.unknownMeal"
+      And the state did not change
+
+    @MENU-28 @MENU-27 @REC-36
+    Scenario: An outside meal is no dish and no name of a past week
+      Given the lunch of Monday in the week "2026-11-02" is outside
+      And the dinner of Monday in the week "2026-11-02" is the dish "Pizza"
+      Then the dishes of the week "2026-11-02" are:
+        | name  | meals |
+        | Pizza | 1     |
+      And the past weeks shown from the week "2026-11-09" are:
+        | week       | planned | names |
+        | 2026-11-02 | 2       | Pizza |
 
   Rule: Llenar cesta
 

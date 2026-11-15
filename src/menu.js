@@ -78,6 +78,13 @@ export const setDish = (state, week, day, meal, rawName) => {
   return put(state, { week, day, meal, dish });
 };
 
+// MENU-28: puts outside in the meal, a meal eaten out that needs no food, in place of the recipe or
+// the dish that the meal had.
+export const setOut = (state, week, day, meal) => {
+  if (!isWeek(week) || !isMeal(day, meal)) return reject(state, 'error.unknownMeal');
+  return put(state, { week, day, meal, out: true });
+};
+
 // Turns the dish of that name into a recipe of that name, or takes the recipe of that name, and puts
 // it in each meal of that dish in the week, with no case distinction. `id` is the recipe.
 export const dishRecipe = (state, week, rawName, newId) => {
@@ -116,9 +123,9 @@ export const clearMenu = (state, week) => {
   return { state: menu.length === state.menu.length ? state : { ...state, menu } };
 };
 
-// MENU-10: the meals of a week that hold a dish or a recipe that exists. A meal whose recipe is
-// gone (a delete on another device, then a sync) shows free, so it is not planned.
-const plannedOf = (state, week) => ofWeek(state, week).filter((entry) => entry.dish || findRecipe(state, entry.recipe));
+// MENU-10: the meals of a week that hold a dish, outside (MENU-28) or a recipe that exists. A meal
+// whose recipe is gone (a delete on another device, then a sync) shows free, so it is not planned.
+const plannedOf = (state, week) => ofWeek(state, week).filter((entry) => entry.dish || entry.out || findRecipe(state, entry.recipe));
 
 export const mealCount = (state, week) => plannedOf(state, week).length;
 
@@ -151,13 +158,19 @@ export const weekSteps = (weeks, shown, today) => {
   return { earlier, later };
 };
 
-// The 7 days of a week, each with its two meals and the recipe and the dish of each meal, or null.
+// The 7 days of a week, each with its two meals and the recipe and the dish of each meal, or null,
+// and whether the meal is outside (MENU-28).
 export const menuWeek = (state, week) =>
   Array.from({ length: DAYS }, (_, day) => ({
     day,
     meals: MEALS.map((meal) => {
       const entry = findEntry(state, week, day, meal);
-      return { meal, recipe: entry?.recipe ? (findRecipe(state, entry.recipe) ?? null) : null, dish: entry?.dish ?? null };
+      return {
+        meal,
+        recipe: entry?.recipe ? (findRecipe(state, entry.recipe) ?? null) : null,
+        dish: entry?.dish ?? null,
+        out: entry?.out === true,
+      };
     }),
   }));
 

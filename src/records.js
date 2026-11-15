@@ -6,7 +6,7 @@ export const recordKey = (kind, key) => `${kind}:${key}`;
 
 const record = (kind, key, data) => [recordKey(kind, key), { kind, key, data }];
 
-// A meal holds a recipe or a dish; the key is the slot, `<week>-<day>-<meal>` (SYNC-1).
+// A meal holds a recipe, a dish or out (MENU-28); the key is the slot, `<week>-<day>-<meal>` (SYNC-1).
 const mealData = ({ week, day, meal, ...rest }) => rest;
 
 // A key of version 9 is `<day>-<meal>`: its meal has no week, and the normalization dates it.
