@@ -4,6 +4,10 @@ Was sich für dich in jeder Version der App ändert. Die neueste Version steht o
 
 ## Unreleased
 
+No change.
+
+## 1.13.9 - 2026-11-15
+
 - Auf dem Handy füllen die Zeilen des Einkaufs die ganze Bildschirmbreite und sind niedriger: Es passen mehr Produkte darauf, und lange Namen sind ganz lesbar. Ein Produkt, das sich wiederholt, zeigt ↻ neben seinem Namen.
 - **Verschieben** gibt es in den Zeilen und in **Bearbeiten** nicht mehr. Hake ab, was du bei diesem Einkauf nicht kaufst, oder lass es offen und wähle beim Beenden des Einkaufs **Verschieben**, um es für den nächsten zu behalten. Die Produkte, die du verschoben hattest, sind wieder im Einkauf.
 

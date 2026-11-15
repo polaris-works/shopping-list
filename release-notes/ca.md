@@ -4,6 +4,10 @@ El que canvia per a tu en cada versió de l’app. La versió més nova va prime
 
 ## Unreleased
 
+No change.
+
+## 1.13.9 - 2026-11-15
+
 - Al mòbil, les files de Compra ocupen tota l’amplada de la pantalla i són més baixes: hi caben més productes i els noms llargs es llegeixen sencers. Un producte que es repeteix mostra ↻ al costat del nom.
 - **Posposar** desapareix de les files i d’**Edita**. Marca com a comprat el que no compres en aquesta sortida, o deixa-ho sense marcar i tria **Ajornar** en acabar la compra per tenir-ho a la següent. Els productes que tenies posposats tornen a Compra.
 

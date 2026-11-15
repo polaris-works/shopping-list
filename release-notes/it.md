@@ -4,6 +4,10 @@ Cosa cambia per te in ogni versione dell’app. La versione più recente viene p
 
 ## Unreleased
 
+No change.
+
+## 1.13.9 - 2026-11-15
+
 - Sul telefono, le righe della Spesa occupano tutta la larghezza dello schermo e sono più basse: entrano più prodotti e i nomi lunghi si leggono per intero. Un prodotto che si ripete mostra ↻ accanto al nome.
 - **Rimanda** non c’è più nelle righe e in **Modifica**. Spunta quello che non compri in questa spesa, oppure lascialo senza spunta e scegli **Rimanda** quando finisci la spesa per tenerlo per la prossima. I prodotti che avevi rimandato tornano nella Spesa.
 
