@@ -4,7 +4,7 @@ Cosa cambia per te in ogni versione dell’app. La versione più recente viene p
 
 ## Unreleased
 
-No change.
+- In Ricette, il numero del filtro scelto si legge bene: ha lo stesso colore del suo nome.
 
 ## 1.13.9 - 2026-11-15
 

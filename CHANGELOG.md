@@ -10,7 +10,8 @@ no change has no entry.
 
 ## Unreleased
 
-No change.
+- REC-40: the count of a pressed `chip` is in `--on-ink`, as its label (`--muted` on the `--ink`
+  fill was 1.83:1 light, 1.51:1 dark; now 17.11:1 and 15.10:1). Shell cache `shopping-shell-v56`.
 
 ## 1.13.9 - 2026-11-15
 

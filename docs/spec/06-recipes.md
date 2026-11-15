@@ -54,7 +54,8 @@ in `Compra` are in [04-arrange.md](04-arrange.md).
   (`recipe-in-list`) below its name, in place of the text on its meta line. A recipe with products
   ends its name with the products on one line, joined by `, ` and cut with an ellipsis
   (`recipe-products`); Compacta hides it. Below the header, the chips **Todas**, **En la lista**
-  and **Con enlace** (`recipe-chips`), each with its count, choose the recipes in view:
+  and **Con enlace** (`recipe-chips`), each with its count, choose the recipes in view; the count of
+  the pressed chip is in `--on-ink`, as its label, not in `--muted`:
   `filterRecipes` of `src/recipes.js`. A filter with no recipe has no chip, a row with Todas alone
   does not show, and a filter that loses its last recipe gives way to Todas. A filter other than
   Todas shows no dishes (REC-38). The choice is `ui.recipeFilter`, not saved.

@@ -4,7 +4,7 @@ El que canvia per a tu en cada versió de l’app. La versió més nova va prime
 
 ## Unreleased
 
-No change.
+- A Receptes, el número del filtre triat es llegeix bé: té el mateix color que el seu nom.
 
 ## 1.13.9 - 2026-11-15
 

@@ -358,7 +358,7 @@
   /* @component chip
      @summary A choice among several, such as a tag or a filter. Selected with aria-pressed="true": an --ink fill.
      @variant surface  Kept for older markup: the chip takes --surface, as the base does.
-     @part count  A number after the label, in muted text.
+     @part count  A number after the label, in muted text; in --on-ink on a pressed chip.
      @example <button class="chip" type="button">Home</button>
      @example <button class="chip" type="button" aria-pressed="true">Work</button>
      @example <div class="cluster" style="background: var(--bg)"><button class="chip surface" type="button" aria-pressed="true"><span>All</span><span class="count">4</span></button><button class="chip surface" type="button"><span>Home</span><span class="count">1</span></button></div> */
@@ -387,6 +387,11 @@
     margin-left: var(--space-2);
     color: var(--muted);
     font-weight: var(--weight-normal);
+  }
+
+  /* --muted on the --ink fill is below 2:1; the count of a pressed chip takes --on-ink. */
+  .chip[aria-pressed="true"] .count {
+    color: inherit;
   }
 
   /* @component pill
