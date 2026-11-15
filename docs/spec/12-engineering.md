@@ -153,6 +153,7 @@
 | `tests/png.test.js` | The PNG encoder and decoder of `scripts/png.mjs`, which `npm run icons` uses |
 | `tests/glyph.test.js` | The segments of a line icon of `scripts/glyph.mjs`, which `npm run icons` draws for the shortcut icons |
 | `tests/release.test.js` | The release of `scripts/release.mjs`: the bump commit, the tag and the refusals, also a `main` behind `origin` and release notes that differ between languages (VER-10 to VER-12, VER-19) |
+| `tests/serve.test.js` | The dev server of `scripts/serve.mjs`: the pidfile, `npm run stop`, a second `serve` while one runs, a stale pidfile and a port taken by another process |
 | `tests/changelog.test.js` | The release of `CHANGELOG.md` and of the release notes by `scripts/changelog.mjs`, which the version bump uses (VER-17, VER-19) |
 | `tests/pair.test.js` | The users, origins and options of `scripts/pair.mjs`, which `npm run pair` runs for a local test between two people |
 | `tests/spec.test.js` | The facts of this specification that the code can prove (ENG-12) |
