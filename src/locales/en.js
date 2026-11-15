@@ -19,6 +19,8 @@ export default {
   'menu.noRecipe': 'no recipe',
   'menu.statusRecipe': 'Recipe ready',
   'menu.statusDish': 'Quick note',
+  'menu.statusOut': 'No shopping',
+  'menu.out': 'Eating out',
   'menu.typeDish': 'Type the name of a dish.',
   'menu.addDish': 'Add “{name}” with no recipe',
   'menu.toRecipe': 'Create recipe',

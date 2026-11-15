@@ -4,6 +4,7 @@ O que muda para si em cada versão da app. A versão mais recente vem primeiro.
 
 ## Unreleased
 
+- No Menu, marque uma refeição como **Fora** quando come fora: conta como planeada e não acrescenta nada às compras.
 - Em Receitas, o número do filtro escolhido lê-se bem: tem a mesma cor que o seu nome.
 
 ## 1.13.9 - 2026-11-15

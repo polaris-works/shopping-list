@@ -10,6 +10,13 @@ no change has no entry.
 
 ## Unreleased
 
+- MENU-28: a meal can be outside, a menu entry `{ week, day, meal, out: true }` with no `recipe`
+  and no `dish` (`setOut` of `src/menu.js`; DATA-13). It counts as planned (MENU-10, MENU-26),
+  `Llenar cesta` skips it, a repeat copies it, `menuDishes` and `pastWeeks` give no name for it;
+  storage drops an entry with `out` and also a `recipe` or a `dish`. The meal sheet has **Fuera**
+  (`menu.out`, tonal, `aria-pressed`) before **Quitar**; **Crear receta** of a dish takes its own
+  row (MENU-19). The slot shows `Fuera`, the icon `log-out` and `Sin compra` (`menu.statusOut`,
+  MENU-25, MENU-26), drawn as a dish.
 - REC-40: the count of a pressed `chip` is in `--on-ink`, as its label (`--muted` on the `--ink`
   fill was 1.83:1 light, 1.51:1 dark; now 17.11:1 and 15.10:1). Shell cache `shopping-shell-v56`.
 

@@ -12,7 +12,7 @@ import { recipeTag } from '#ui/view';
 const LISTS = ['own', 'shared'];
 
 // MENU-20: each list has its own week, so a slot may hold two meals, one of each list. The meals of
-// a slot are `{ which, shared, recipe, dish }`, the own one first. With no share the shared week is
+// a slot are `{ which, shared, recipe, dish, out }`, the own one first. With no share the shared week is
 // empty. The week is the one in view (MENU-23).
 const week = () => {
   const weeks = LISTS.map((which) => menu.menuWeek(listPart(state, which), shownWeek()));
@@ -21,8 +21,8 @@ const week = () => {
     meals: meals.map(({ meal }, index) => ({
       meal,
       planned: LISTS.flatMap((which, list) => {
-        const { recipe, dish } = weeks[list][day].meals[index];
-        return recipe || dish ? [{ which, shared: which === 'shared', recipe, dish }] : [];
+        const { recipe, dish, out } = weeks[list][day].meals[index];
+        return recipe || dish || out ? [{ which, shared: which === 'shared', recipe, dish, out }] : [];
       }),
     })),
   }));
@@ -44,11 +44,25 @@ export const dateFormat = () => {
   return shortDate.get(lang);
 };
 
-// The status line of a slot with one meal (MENU-25): a recipe or a dish, after a dot.
+// The kind of a meal: `recipe`, `dish` or `out` (MENU-28).
+const kindOf = (entry) => (entry.out ? 'out' : entry.dish ? 'dish' : 'recipe');
+
+// The kind of a slot when all its meals share it, or null.
+const slotKind = (planned) => {
+  const kinds = new Set(planned.map(kindOf));
+  return kinds.size === 1 ? [...kinds][0] : null;
+};
+
+const STATUS = { recipe: 'menu.statusRecipe', dish: 'menu.statusDish', out: 'menu.statusOut' };
+
+// DSV-20: the icon of the kind of a planned meal.
+const KIND_ICON = { recipe: 'utensils', dish: 'edit', out: 'log-out' };
+
+// The status line of a slot with one meal (MENU-25): a recipe, a dish or outside, after a dot.
 const statusNode = (planned) => {
   if (planned.length !== 1) return [];
-  const dish = Boolean(planned[0].dish);
-  const node = el('small', { className: dish ? 'meal-status dish' : 'meal-status', textContent: t(dish ? 'menu.statusDish' : 'menu.statusRecipe') });
+  const kind = kindOf(planned[0]);
+  const node = el('small', { className: kind === 'recipe' ? 'meal-status' : `meal-status ${kind}`, textContent: t(STATUS[kind]) });
   node.setAttribute('aria-hidden', 'true');
   return [node];
 };
@@ -68,7 +82,7 @@ export const closeMeal = () => {
 // The meals of a slot, own first: none, one, or one of each list.
 const plannedOf = ({ day, meal }) => week()[day].meals.find((candidate) => candidate.meal === meal).planned;
 
-const plannedName = ({ recipe, dish }) => recipe?.name ?? dish;
+const plannedName = ({ recipe, dish }) => recipe?.name ?? dish ?? t('menu.out');
 
 // The name of a meal in the slot, with the tag of its list when the screen shows tags.
 const plannedNode = (entry) => {
@@ -85,7 +99,8 @@ const plannedLabel = (entry) => {
 // MENU-23: a meal of a past week is a tile with no action; an empty one shows a dash.
 const pastMealNode = (day, { meal, planned }) => {
   const names = planned.length ? planned.map(plannedNode) : [el('span', { className: 'meal-name', textContent: '—' })];
-  const kind = !planned.length ? 'meal past free' : planned.every((entry) => entry.dish) ? 'meal past dish' : 'meal past';
+  const slot = slotKind(planned);
+  const kind = !planned.length ? 'meal past free' : slot === 'dish' || slot === 'out' ? `meal past ${slot}` : 'meal past';
   const node = el('div', { className: kind }, [el('small', { className: 'meal-label', textContent: t(`meal.${meal}`) }), ...names, ...statusNode(planned)]);
   node.setAttribute('role', 'group');
   node.setAttribute('aria-label', `${mealTitle(day, meal)}: ${planned.length ? planned.map(plannedLabel).join('; ') : t('menu.noMeal')}`);
@@ -96,10 +111,12 @@ const mealNode = (day, { meal, planned }) => {
   if (pastShown()) return pastMealNode(day, { meal, planned });
   const dish = planned.length === 1 && planned[0].dish;
   const label = dish ? `${t(`meal.${meal}`)} · ${t('menu.noRecipe')}` : t(`meal.${meal}`);
-  const kind = !planned.length ? 'meal free' : planned.every((entry) => entry.dish) ? 'meal dish' : 'meal';
+  const slot = slotKind(planned);
+  const kind = !planned.length ? 'meal free' : slot === 'dish' || slot === 'out' ? `meal ${slot}` : 'meal';
   const names = planned.length ? planned.map(plannedNode) : [icon('plus-circle', 'meal-add'), el('span', { className: 'meal-name', textContent: t('menu.choose') })];
-  // DSV-20: the kind of a planned meal as an icon at its top end, cutlery for a recipe, a pencil for a dish.
-  const kindIcon = planned.length ? [icon(planned.every((entry) => entry.dish) ? 'edit' : 'utensils', 'small meal-icon')] : [];
+  // DSV-20: the kind of a planned meal as an icon at its top end: cutlery for a recipe, a pencil for
+  // a dish, log-out for an outside meal; cutlery for a slot of mixed kinds.
+  const kindIcon = planned.length ? [icon(KIND_ICON[slot ?? 'recipe'], 'small meal-icon')] : [];
   const button = el('button', { type: 'button', className: kind, onclick: () => openMeal(day, meal) }, [
     ...kindIcon,
     el('small', { className: 'meal-label', textContent: label }),
@@ -234,8 +251,9 @@ export const renderMeal = () => {
   $('meal-planned').replaceChildren(...(two ? planned.map((entry) => plannedRow(day, meal, entry)) : []));
   $('meal-recipe').hidden = !dish;
   $('meal-remove').hidden = planned.length !== 1;
-  // The bar of the foot holds Crear receta of a dish and the Quitar of one meal: with neither it hides.
-  $('meal-actions').hidden = !dish && planned.length !== 1;
+  // MENU-11: Fuera is always in the foot bar, on for a slot with an outside meal.
+  $('meal-out').setAttribute('aria-pressed', String(planned.some((entry) => entry.out)));
+  $('meal-actions').hidden = false;
   mealHeight ??= $('meal-sheet').offsetHeight;
   $('meal-sheet').style.minHeight = `${mealHeight}px`;
 };
@@ -259,6 +277,15 @@ const clearPlanned = (day, meal, entry) => {
 const dishOf = (query) => {
   const key = query.toLowerCase();
   return query && !state.recipes.some((recipe) => recipe.name.toLowerCase() === key) ? query : null;
+};
+
+// MENU-28: Fuera puts outside in the own meal (MENU-20); on an outside meal it only closes the sheet.
+const markOut = () => {
+  const { day, meal } = ui.mealOpen;
+  const out = plannedOf(ui.mealOpen).some((entry) => entry.out);
+  ui.mealOpen = null;
+  if (out) render();
+  else apply(onOwn((own) => menu.setOut(own, shownWeek(), day, meal)));
 };
 
 const addDish = () => {
@@ -295,6 +322,7 @@ export const bind = () => {
   });
   $('meal-dish').addEventListener('click', addDish);
   $('meal-recipe').addEventListener('click', dishToRecipe);
+  $('meal-out').addEventListener('click', markOut);
   $('meal-remove').addEventListener('click', () => {
     const { day, meal } = ui.mealOpen;
     const [entry] = plannedOf(ui.mealOpen);

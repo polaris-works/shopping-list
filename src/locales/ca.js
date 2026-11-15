@@ -19,6 +19,8 @@ export default {
   'menu.noRecipe': 'sense recepta',
   'menu.statusRecipe': 'Recepta llesta',
   'menu.statusDish': 'Anotació ràpida',
+  'menu.statusOut': 'Sense compra',
+  'menu.out': 'Fora',
   'menu.typeDish': 'Escriu el nom d’un plat.',
   'menu.addDish': 'Afegeix «{name}» sense recepta',
   'menu.toRecipe': 'Crea la recepta',

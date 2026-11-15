@@ -66,8 +66,11 @@ past weeks stay, read only, and the next weeks can be planned ahead.
   outside meal (MENU-28) is planned.
 - **MENU-11** A tap on a meal opens the meal sheet, `Comida del lunes`. It has one chip for each
   recipe, in the order of the recipes; the chip of the recipe of the meal is on. A tap on a chip
-  puts that recipe in the meal and closes the sheet. A meal with a recipe or a dish also has
-  **Quitar**, with `Deshacer` and the message `Quitada del menú: «name».`
+  puts that recipe in the meal and closes the sheet. A meal with a recipe, a dish or outside also
+  has **Quitar**, with `Deshacer` and the message `Quitada del menú: «name».`; the name of an
+  outside meal is `Fuera`. The foot bar has **Fuera** (`menu.out`), a tonal button, before
+  **Quitar**: a tap puts outside in the own meal (MENU-20, MENU-28) and closes the sheet. On a slot
+  with an outside meal it is on (`aria-pressed`), and a tap only closes the sheet.
 - **MENU-12** An action bar stays at the bottom of the list of `Menú`, above the bottom bar.
   For this week and a later week it has two buttons of equal width: **Llenar cesta** on the side of the hand and **Vaciar
   menú** beside it. **Llenar cesta** fills `Compra` from the week in view (MENU-5). It has the icon `cart-add`, the
@@ -90,9 +93,10 @@ past weeks stay, read only, and the next weeks can be planned ahead.
   distinction, the meal sheet shows **Añadir «text» sin receta** below the chips. A tap on it, or
   `Enter` in the field, puts the text as a dish in the meal (MENU-3) and closes the sheet. With a
   recipe of that name `Enter` does nothing.
-- **MENU-19** The meal sheet of a dish has **Crear receta** and **Quitar** side by side, each
-  half of the line, with **Crear receta**, a primary button, at the side of the hand (NAV-12). The **Quitar** of a
-  meal with a recipe takes the full line. A tap turns the dish
+- **MENU-19** The meal sheet of a dish has **Crear receta**, a primary button, across the foot bar,
+  above **Fuera** and **Quitar**, which stand side by side, each half of the line. **Fuera** takes
+  the full line when the sheet has no **Quitar** (a free slot, or a slot with two meals). A tap on
+  **Crear receta** turns the dish
   into a recipe (MENU-17), closes the sheet, shows `Recetas` and opens the sheet of the recipe,
   with `Deshacer` and the message `Receta creada: «name».` The message is the same when the meals
   take a recipe that exists.
@@ -156,7 +160,8 @@ past weeks stay, read only, and the next weeks can be planned ahead.
   `Intl.DateTimeFormat#formatRange`). The head of each day ends with its date in small capitals
   (`2 NOV`); from 600px the date stands below the name. A free meal has the icon `plus-circle`
   above `Elegir receta`. A slot with one meal ends with a status line after a dot: **Receta lista**
-  (`menu.statusRecipe`) for a recipe, **Anotación rápida** (`menu.statusDish`) for a dish; a slot
+  (`menu.statusRecipe`) for a recipe, **Anotación rápida** (`menu.statusDish`) for a dish, **Sin
+  compra** (`menu.statusOut`) for an outside meal (MENU-28); a slot
   with two meals (MENU-20) has none, and Compacta (NAV-20) hides it. The status line is hidden from
   a screen reader, as the label of the tile already says it.
 - **MENU-26** Above **Llenar cesta** and **Vaciar menú**, a line counts the slots of the week in
@@ -164,7 +169,8 @@ past weeks stay, read only, and the next weeks can be planned ahead.
   `9 de 14 comidas planificadas · 5 libres`). A slot with a meal of each list (MENU-20) counts
   once (`plannedSlots` of `src/menu.js`). A meal whose recipe does not exist any more is free
   (MENU-10). The week bar starts with the icon `calendar`; a planned
-  meal shows its kind at its top end (cutlery for a recipe, a pencil for a dish); a free meal
+  meal shows its kind at its top end (cutlery for a recipe, a pencil for a dish, `log-out` for an
+  outside meal, whose name is `Fuera`); a free meal
   shows `Elegir receta` first and the name of the meal below it; **Vaciar menú** has the icon
   `trash` (DSV-20).
 - **MENU-27** From 600px wide, `Menú` shows the panel **Semanas anteriores** (`panels.weeks`) on any

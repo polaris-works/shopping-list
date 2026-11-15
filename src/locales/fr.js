@@ -19,6 +19,8 @@ export default {
   'menu.noRecipe': 'sans recette',
   'menu.statusRecipe': 'Recette prête',
   'menu.statusDish': 'Note rapide',
+  'menu.statusOut': 'Pas de courses',
+  'menu.out': 'Dehors',
   'menu.typeDish': 'Saisissez le nom d’un plat.',
   'menu.addDish': 'Ajouter « {name} » sans recette',
   'menu.toRecipe': 'Créer la recette',

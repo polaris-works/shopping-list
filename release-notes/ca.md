@@ -4,6 +4,7 @@ El que canvia per a tu en cada versió de l’app. La versió més nova va prime
 
 ## Unreleased
 
+- A Menú, marca un àpat com a **Fora** quan menges fora: compta com a planificat i no afegeix res a la compra.
 - A Receptes, el número del filtre triat es llegeix bé: té el mateix color que el seu nom.
 
 ## 1.13.9 - 2026-11-15

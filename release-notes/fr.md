@@ -4,6 +4,7 @@ Ce qui change pour vous dans chaque version de l’app. La version la plus réce
 
 ## Unreleased
 
+- Dans Menu, marquez un repas comme **Dehors** quand vous mangez dehors : il compte comme planifié et n’ajoute rien aux courses.
 - Dans Recettes, le nombre du filtre choisi se lit bien : il a la même couleur que son nom.
 
 ## 1.13.9 - 2026-11-15

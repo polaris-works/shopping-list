@@ -2539,6 +2539,7 @@
      @summary One meal of a day: its label, then its recipe or the call to choose one.
      @variant free   A meal with no recipe and no dish.
      @variant dish   A meal with a dish that has no recipe.
+     @variant out    A meal eaten outside (MENU-28): drawn as a dish, with the icon log-out.
      @variant past   A meal of a past week: read only, its name muted (MENU-23).
      @part meal-label  Comida or Cena.
      @part meal-name   The recipe, cut with an ellipsis.
@@ -2564,7 +2565,8 @@
     background: none;
   }
 
-  .meal.dish {
+  .meal.dish,
+  .meal.out {
     border-color: var(--muted);
   }
 
@@ -2575,11 +2577,21 @@
 
   /* @component meal-actions
      @scope menu
-     @summary The buttons of the meal sheet, on a split: Crear receta and Quitar side by side, or
-              Quitar alone across the full width.
-     @example <div class="split meal-actions" style="width: 100%"><button class="button primary hand-side" type="button">Crear receta</button><button class="button outline danger" type="button">Quitar</button></div> */
-  .meal-actions:has(> [hidden]) > :not([hidden]) {
+     @summary The buttons of the meal sheet, on a split: Crear receta of a dish across the full
+              width, then Fuera and Quitar side by side, or Fuera alone across the full width
+              (MENU-19). Fuera is on with aria-pressed="true": an --ink fill.
+     @example <div class="split meal-actions" style="width: 100%"><button class="button primary hand-side" type="button">Crear receta</button><button class="button tonal" type="button" aria-pressed="false">Fuera</button><button class="button outline danger" type="button">Quitar</button></div> */
+  .split.meal-actions > .hand-side {
     grid-column: 1 / -1;
+  }
+
+  .split.meal-actions > :not([hidden]):has(+ [hidden]) {
+    grid-column: 1 / -1;
+  }
+
+  .meal-actions > [aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--on-ink);
   }
 
   .meal-label {
@@ -3600,7 +3612,8 @@
     font-size: var(--text-label);
   }
 
-  .meal.dish {
+  .meal.dish,
+  .meal.out {
     border-color: var(--line);
     background: var(--surface-2);
   }
@@ -3675,7 +3688,8 @@
     background: currentColor;
   }
 
-  .meal-status.dish {
+  .meal-status.dish,
+  .meal-status.out {
     color: var(--muted);
   }
 
@@ -3695,7 +3709,8 @@
     color: var(--done);
   }
 
-  .meal.dish .meal-icon {
+  .meal.dish .meal-icon,
+  .meal.out .meal-icon {
     color: var(--muted);
   }
 
@@ -3857,7 +3872,8 @@
       background: var(--surface-2);
     }
 
-    .meal.dish {
+    .meal.dish,
+    .meal.out {
       border-color: var(--line);
       background: var(--surface);
     }
@@ -3872,7 +3888,8 @@
       font-weight: var(--weight-strong);
     }
 
-    .meal.dish .meal-label {
+    .meal.dish .meal-label,
+    .meal.out .meal-label {
       color: var(--muted);
     }
 
@@ -3918,7 +3935,8 @@
       display: none;
     }
 
-    .meal-status.dish {
+    .meal-status.dish,
+    .meal-status.out {
       background: var(--surface-high);
       font-weight: var(--weight-medium);
     }

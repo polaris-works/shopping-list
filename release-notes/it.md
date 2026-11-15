@@ -4,6 +4,7 @@ Cosa cambia per te in ogni versione dell’app. La versione più recente viene p
 
 ## Unreleased
 
+- In Menù, segna un pasto come **Fuori** quando mangi fuori: conta come pianificato e non aggiunge niente alla spesa.
 - In Ricette, il numero del filtro scelto si legge bene: ha lo stesso colore del suo nome.
 
 ## 1.13.9 - 2026-11-15
