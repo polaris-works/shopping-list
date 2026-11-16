@@ -87,6 +87,19 @@ PocketBase. The app talks to it with `fetch` and `EventSource`, with no SDK (PRO
   sends nothing. **Usar sin cuenta** writes it. A login that opens the list removes it, and
   **Borrar todos los datos** removes it with the other keys (BACKUP-7). A storage that refuses
   the write still closes **Iniciar sesión**.
+- **ACC-14** The group **Cuenta** has **Eliminar cuenta** while there is a session. It asks
+  `account.deleteAsk` (the account, its data and the same account of the other apps of the server
+  go for good); a no changes nothing. A yes offers an export (`account.deleteExport`), then the app
+  refreshes the token and deletes the user on the server (`DELETE` of `users/<id>`). The server
+  deletes the records, the shares and the access rows of the user with it. Only after the server
+  took the delete, the app clears the local data, the queue and the session as a logout (ACC-9),
+  with the queue dropped, and shows **Iniciar sesión** and the toast `account.deleted`. A delete
+  that fails changes nothing on the device and shows `account.error.network` (no network, a
+  server error, a rate limit) or `account.error.google` (an auth error: sign in again).
+- **ACC-15** The group **Cuenta** has **Privacidad**, with or without a session. It opens the
+  privacy policy, `https://polaris-works.github.io/bodega/privacy.html`, in a new tab. The policy
+  names the route to delete an account without the app,
+  `https://polaris-works.github.io/bodega/delete-account.html`.
 
 ## Sync
 

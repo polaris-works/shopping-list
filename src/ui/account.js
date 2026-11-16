@@ -313,6 +313,24 @@ export const logout = async () => {
   render();
 };
 
+// ACC-14: two questions, then the server deletes the user. Only a delete that the server took clears
+// the device; a failed one keeps the session and the list, and the sync goes on.
+export const deleteAccount = async () => {
+  if (!window.confirm(t('account.deleteAsk'))) return;
+  if (window.confirm(t('account.deleteExport'))) exportState(ownState());
+  disconnect();
+  const result = await syncer.deleteAccount();
+  if (result !== 'done') {
+    connect();
+    showToast(t(result.error));
+    return;
+  }
+  ui.view = 'active';
+  show('login');
+  render();
+  showToast(t('account.deleted'));
+};
+
 // BACKUP-7: Borrar todos los datos stops the sync before it clears the storage. A sync in progress
 // becomes stale and saves nothing; the queue is dropped, as the reset drops it anyway (SYNC-10).
 export const stopSync = async () => {
@@ -443,6 +461,7 @@ export const renderSync = () => {
   $('sync-banner').hidden = !inList() || (session !== null ? !status.auth : !hasLocalData() || offlineChosen());
   $('account-row').hidden = !session;
   $('logout').hidden = !session;
+  $('account-delete').hidden = !session;
   $('account-login').hidden = session !== null && !status.auth;
   $('account-email').textContent = session ? session.user.email || session.user.name : '';
   $('account-sync').textContent = session ? lastSyncText() : '';
@@ -473,4 +492,5 @@ export const bind = () => {
   $('sync-login').addEventListener('click', openLogin);
   $('account-login').addEventListener('click', openLogin);
   $('logout').addEventListener('click', logout);
+  $('account-delete').addEventListener('click', deleteAccount);
 };

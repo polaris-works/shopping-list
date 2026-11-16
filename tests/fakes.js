@@ -56,6 +56,8 @@ export const fakeServer = () => {
     stamp,
     // SHARE-1, SHARE-11: the shares of the server, `{ id, owner, email, ownerEmail, member, ownerName, scope, cancelled }`.
     shares: [],
+    // ACC-14: the ids of the users that deleted their account.
+    deletedUsers: [],
     live: (owner) => rows.filter((row) => row.owner === owner && !row.deleted),
     add: (owner, kind, key, data) => rows.push({ id: `pb${rows.length + 1}`, owner, kind, key, data, deleted: false, updated: stamp() }),
     copy,
@@ -143,6 +145,17 @@ export const fakeClient = (server, { approved = true } = {}) => {
       calls.push('remove');
       if (client.failShareCall) throw client.failShareCall;
       server.shares.splice(server.shares.findIndex((s) => s.id === id), 1);
+    },
+    // ACC-14: the server deletes the user, and with it the records and the shares of the user.
+    failDeleteUser: null,
+    deleteUser: async (token, id) => {
+      calls.push('delete-user');
+      if (client.failDeleteUser) throw client.failDeleteUser;
+      if (ownerOf(token) !== id) throw refusedRule();
+      server.deletedUsers.push(id);
+      const keep = (list, gone) => list.splice(0, list.length, ...list.filter((row) => !gone(row)));
+      keep(server.rows, (row) => row.owner === id);
+      keep(server.shares, (s) => s.owner === id || s.member === id);
     },
     pull: async (token, since, space) => {
       calls.push('pull');

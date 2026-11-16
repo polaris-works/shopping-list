@@ -4,7 +4,7 @@ El que canvia per a tu en cada versió de l’app. La versió més nova va prime
 
 ## Unreleased
 
-No change.
+- **Configuració → Compte** té **Elimina el compte**, que esborra el compte i les dades del servidor, i **Privadesa**, que obre la política de privadesa.
 
 ## 1.13.10 - 2026-11-15
 

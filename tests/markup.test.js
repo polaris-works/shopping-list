@@ -365,3 +365,11 @@ test('a hint or a tag describes its control and stays out of its name (DSV-18, D
   assert.match(body, /<button id="reset"[^>]*aria-describedby="reset-tag"/);
   assert.match(body, hint('reset-tag'));
 });
+
+test('the group Cuenta links the privacy policy in a new tab and has Eliminar cuenta (ACC-14, ACC-15)', () => {
+  const privacy = body.match(/<a id="privacy"[^>]*>/)?.[0] ?? '';
+  assert.match(privacy, /href="https:\/\/polaris-works\.github\.io\/bodega\/privacy\.html"/);
+  assert.match(privacy, /target="_blank"/);
+  assert.match(privacy, /rel="noopener"/);
+  assert.match(body, /<button id="account-delete" class="settings-row danger" type="button">/);
+});

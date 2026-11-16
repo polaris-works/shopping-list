@@ -210,6 +210,7 @@ ACC-2 screen The screens Iniciar sesión and Sin acceso, their buttons, texts, e
 ACC-5 screen The Google redirect, its sessionStorage and the clean-up of the URL; tests/pocketbase.test.js checks oauthStart and oauthFinish.
 ACC-10 screen The row Cuenta of Ajustes: the email, the time of the last sync and Cerrar sesión.
 ACC-11 screen The banner of a device with no session; its route is the banner case of ACC-1.
+ACC-15 screen The row Privacidad of Ajustes and its link; tests/markup.test.js checks the URL.
 
 # 19-sharing.md: no line; the scenarios tag each rule, and the sheet, the chips and the tags of
 # SHARE-5, SHARE-9 and SHARE-14 keep the browser check of ENG-9.

@@ -10,7 +10,14 @@ no change has no entry.
 
 ## Unreleased
 
-No change.
+- ACC-14: **Eliminar cuenta** in the group **Cuenta** of `Ajustes`. It asks `account.deleteAsk`, offers
+  an export, refreshes the token and sends `DELETE /api/collections/users/records/<id>`
+  (`deleteUser` of `src/pocketbase.js`); the server cascades to the records, the shares and the
+  access rows. Only a delete that the server took clears the device, as a logout with the queue
+  dropped (`deleteAccount` of `src/syncer.js` and of `src/ui/account.js`).
+- ACC-15: **Privacidad** in the group **Cuenta** opens
+  `https://polaris-works.github.io/bodega/privacy.html` in a new tab; the Play listing needs a link
+  to the policy inside the app.
 
 ## 1.13.10 - 2026-11-15
 

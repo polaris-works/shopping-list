@@ -652,6 +652,27 @@ export const createSyncer = ({
     return 'done';
   };
 
+  // ACC-14: the server deletes the user first; only then the device clears, as a logout with the
+  // queue dropped. A failed delete changes nothing. Resolves to 'done', or to `{ error }`.
+  const deleteAccount = async () => {
+    const session = activeSession();
+    if (!session) return { error: 'account.error.google' };
+    const mine = generation;
+    const { token, stop } = await freshToken(session, () => mine === generation, { force: true });
+    if (stop === STALE) return { error: 'account.error.network' };
+    if (stop) return { error: stop === 'auth' ? 'account.error.google' : 'account.error.network' };
+    try {
+      await client.deleteUser(token, session.user.id);
+    } catch (error) {
+      if (!(error instanceof PocketBaseError)) throw error;
+      return { error: stopOf(error) === 'auth' ? 'account.error.google' : 'account.error.network' };
+    }
+    reset();
+    online = true;
+    report();
+    return 'done';
+  };
+
   // SHARE-3, SHARE-5, SHARE-8: a request of a share, then a run that applies it. Resolves to 'ok', or to
   // `{ error }` with the key of the message.
   const shareRequest = async (request) => {
@@ -696,5 +717,5 @@ export const createSyncer = ({
 
   const reinvite = (id) => shareRequest((token) => client.reinvite(token, id));
 
-  return { notify, notifyShared, run, login, logout, status, invite, accept, remove, decline, leave, setScope, reinvite };
+  return { notify, notifyShared, run, login, logout, deleteAccount, status, invite, accept, remove, decline, leave, setScope, reinvite };
 };

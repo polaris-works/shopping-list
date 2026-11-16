@@ -217,6 +217,12 @@ export const createClient = ({ url, fetch, EventSource }) => {
       await call('DELETE', `${SHARES}/${id}`, { token });
     },
 
+    // ACC-14: the server deletes the records, the shares and the access rows of the user with it.
+    deleteUser: async (token, userId) => {
+      if (!userId) throw new PocketBaseError('auth');
+      await call('DELETE', `${USERS}/records/${encodeURIComponent(userId)}`, { token });
+    },
+
     // `ids` is keyed by recordKey(kind, key). Resolves to the server record, or null for a delete of
     // a record that the server does not hold. A delete of a known record that the server does not
     // find throws `gone`: a token that is not valid gets the same answers, so the syncer checks the

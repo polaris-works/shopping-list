@@ -334,6 +334,46 @@ test('logout online sends the queue, then clears the account data', async () => 
   assert.deepEqual(a.box.state, emptyState());
 });
 
+test('deleteAccount refreshes the token, deletes the user, then clears the account data and keeps the preferences (ACC-14)', async () => {
+  const server = fakeServer();
+  const a = device({ server });
+  a.storage.setItem('shopping.theme', 'dark');
+  a.change(withItems([item('i1', 'Leche')]));
+  assert.equal(await a.syncer.deleteAccount(), 'done');
+  assert.deepEqual(a.client.calls, ['refresh', 'delete-user']);
+  assert.deepEqual(server.deletedUsers, ['u1']);
+  assert.deepEqual(a.storage.keys(), ['shopping.theme']);
+  assert.deepEqual(a.box.state, emptyState());
+});
+
+test('deleteAccount with no session, or with a session not approved, sends nothing (ACC-14)', async () => {
+  const none = device({ server: fakeServer(), session: null });
+  assert.deepEqual(await none.syncer.deleteAccount(), { error: 'account.error.google' });
+  const waiting = device({ server: fakeServer(), approved: false, session: sessionOf('u1', false) });
+  assert.deepEqual(await waiting.syncer.deleteAccount(), { error: 'account.error.google' });
+  assert.deepEqual([...none.client.calls, ...waiting.client.calls], []);
+});
+
+test('deleteAccount that the server refuses keeps the session and the state (ACC-14)', async () => {
+  const server = fakeServer();
+  const a = device({ server });
+  const state = withItems([item('i1', 'Leche')]);
+  a.change(state);
+  a.client.failDeleteUser = new PocketBaseError('server', 500);
+  assert.deepEqual(await a.syncer.deleteAccount(), { error: 'account.error.network' });
+  a.client.failDeleteUser = refusedRule();
+  assert.deepEqual(await a.syncer.deleteAccount(), { error: 'account.error.google' });
+  assert.notEqual(a.storage.getItem(SESSION_KEY), null);
+  assert.equal(a.box.state, state);
+  assert.deepEqual(server.deletedUsers, []);
+});
+
+test('deleteAccount throws an error that is not of the server', async () => {
+  const a = device({ server: fakeServer() });
+  a.client.failDeleteUser = new TypeError('bug');
+  await assert.rejects(a.syncer.deleteAccount(), TypeError);
+});
+
 test('logout offline with a queue returns ask-export', async () => {
   const server = fakeServer();
   const a = device({ server });

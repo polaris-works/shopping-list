@@ -346,6 +346,13 @@ const defineDeviceSteps = ({ Given, When, Then }) => {
     act(device);
     device.logout = await quiet(() => device.syncer.logout({ online: false, discard: true }));
   });
+  // ACC-14: Eliminar cuenta after its questions, as `deleteAccount` of src/ui/account.js does.
+  When('{string} deletes the account', async (world, name) => {
+    const device = deviceOf(world, name);
+    act(device);
+    const result = await quiet(() => device.syncer.deleteAccount());
+    device.deletion = typeof result === 'string' ? result : result.error;
+  });
   // SYNC-10: Borrar todos los datos stops the sync first, as `stopSync` of src/ui/account.js does.
   When('{string} stops the sync for a reset', async (world, name) => {
     const device = deviceOf(world, name);
@@ -430,11 +437,12 @@ const defineDeviceSteps = ({ Given, When, Then }) => {
       failPull: errorOf('network'),
       failPush: () => errorOf('network'),
       failShareCall: errorOf('network'),
+      failDeleteUser: errorOf('network'),
     });
   });
   Given('{string} gets the network back', (world, name) => {
     const { client } = deviceOf(world, name);
-    Object.assign(client, { failRefresh: null, failShares: null, failPull: null, failPush: null, failShareCall: null });
+    Object.assign(client, { failRefresh: null, failShares: null, failPull: null, failPush: null, failShareCall: null, failDeleteUser: null });
   });
   Given('the storage of {string} refuses the key {string}', (world, name, key) => {
     const { storage } = deviceOf(world, name);
@@ -526,6 +534,18 @@ const defineDeviceSteps = ({ Given, When, Then }) => {
   });
   Then('the login of {string} failed', (world, name) => {
     assert.ok(deviceOf(world, name).error, 'The login did not fail');
+  });
+  Then('the account deletion of {string} gives {word}', (world, name, outcome) => {
+    assert.equal(deviceOf(world, name).deletion, outcome);
+  });
+  Then('the server holds no account of {string}', (world, user) => {
+    assert.ok(world.server.deletedUsers.includes(user), `The server still holds the account of "${user}"`);
+  });
+  Then('the server holds the account of {string}', (world, user) => {
+    assert.ok(!world.server.deletedUsers.includes(user), `The server deleted the account of "${user}"`);
+  });
+  Then('the server holds no share of {string}', (world, user) => {
+    assert.deepEqual(world.server.shares.filter((s) => s.owner === user || s.member === user), []);
   });
   Then('the logout of {string} gives {word}', (world, name, outcome) => {
     assert.equal(deviceOf(world, name).logout, outcome);

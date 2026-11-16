@@ -280,6 +280,19 @@ test('invite, acceptShare and removeShare send their method, path and body', asy
   ]);
 });
 
+test('deleteUser sends a DELETE of the user record with the token (ACC-14)', async () => {
+  const { calls, client } = fake(reply(204, null));
+  assert.equal(await client.deleteUser(TOKEN, 'user1'), undefined);
+  assert.deepEqual(calls.map((c) => [c.method, c.url.pathname, c.body, c.headers.Authorization]), [
+    ['DELETE', '/api/collections/users/records/user1', undefined, TOKEN],
+  ]);
+});
+
+test('deleteUser refuses an empty user id and throws the error of the server', async () => {
+  await assert.rejects(fake().client.deleteUser(TOKEN, ''), (error) => error.type === 'auth');
+  await assert.rejects(fake(reply(403, { data: {} })).client.deleteUser(TOKEN, 'user1'), (error) => error.type === 'auth');
+});
+
 test('invite sends the scope, and the other share requests send their body', async () => {
   const { calls, client } = fake(reply(200, shareRow()), reply(200, shareRow()), reply(200, shareRow()), reply(200, shareRow()));
   await client.invite(TOKEN, 'owner1', 'b@b.c', 'list');

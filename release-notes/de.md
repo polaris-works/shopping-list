@@ -4,7 +4,7 @@ Was sich für dich in jeder Version der App ändert. Die neueste Version steht o
 
 ## Unreleased
 
-No change.
+- **Optionen → Konto** hat **Konto löschen**, das dein Konto und seine Daten vom Server löscht, und **Datenschutz**, das die Datenschutzerklärung öffnet.
 
 ## 1.13.10 - 2026-11-15
 

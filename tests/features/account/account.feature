@@ -275,6 +275,49 @@ Feature: Account
       And the key "shopping.sync" of "phone" is not stored
       And the key "shopping.queue" of "phone" is not stored
 
+  Rule: Delete the account
+
+    @ACC-14
+    Scenario: Eliminar cuenta deletes the account on the server, then clears the account data of the device
+      Given a device "phone" signed in as "ana"
+      And "phone" adds "Leche" and syncs
+      When "phone" deletes the account
+      Then the account deletion of "phone" gives done
+      And the server holds no account of "ana"
+      And the space of "ana" on the server holds the items ""
+      And "phone" sees the items ""
+      And the key "shopping.session" of "phone" is not stored
+      And the key "shopping.queue" of "phone" is not stored
+
+    @ACC-14
+    Scenario: The shares of a deleted account go with it
+      Given a device "phone" signed in as "ana"
+      And "ana" shares the list with "bea"
+      When "phone" deletes the account
+      Then the account deletion of "phone" gives done
+      And the server holds no share of "ana"
+
+    @ACC-14
+    Scenario: With no network the delete fails and changes nothing
+      Given a device "phone" signed in as "ana"
+      And "phone" adds "Leche" and syncs
+      And the token of "phone" expires
+      And "phone" loses the network
+      When "phone" deletes the account
+      Then the account deletion of "phone" gives account.error.network
+      And the server holds the account of "ana"
+      And "phone" sees the items "Leche"
+      And the saved session of "phone" is the one of "ana"
+
+    @ACC-14
+    Scenario: A token that the server refuses stops the delete and asks for a login
+      Given a device "phone" signed in as "ana"
+      And the token of "phone" expires
+      And the refresh of "phone" fails with auth
+      When "phone" deletes the account
+      Then the account deletion of "phone" gives account.error.google
+      And the server holds the account of "ana"
+
   Rule: The API URL
 
     @ACC-12

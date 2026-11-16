@@ -2801,6 +2801,11 @@
     position: relative;
   }
 
+  /* ACC-15: Privacidad is a link that looks like the other rows. */
+  a.settings-row {
+    text-decoration: none;
+  }
+
   /* DSV-21: the parts of the Ajustes of the Bodega screens. */
   .settings .list-group-head {
     display: flex;

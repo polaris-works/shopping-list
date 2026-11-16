@@ -4,7 +4,7 @@ Ce qui change pour vous dans chaque version de l’app. La version la plus réce
 
 ## Unreleased
 
-No change.
+- **Réglages → Compte** a **Supprimer le compte**, qui supprime votre compte et ses données du serveur, et **Confidentialité**, qui ouvre la politique de confidentialité.
 
 ## 1.13.10 - 2026-11-15
 
