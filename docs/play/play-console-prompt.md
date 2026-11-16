@@ -54,21 +54,25 @@ Store settings (Store presence → Store settings):
 
 ## 3. App content (Policy and programs → App content)
 
-- Privacy policy: https://bodega.polarisworks.duckdns.org/privacy.html
+- Privacy policy: https://polaris-works.github.io/bodega/privacy.html
 - App access: All functionality is available without special access. (Sign-in with Google is optional; every function works with no account.)
 - Ads: No, the app does not contain ads.
 - Content rating: email for the questionnaire = the contact email I gave you. Category: "All other app types" (utility / productivity). Answer "No" to violence, sexuality, language, controlled substances, gambling. User interaction: users do not interact or share content publicly; a list can be shared by email only with named people the user chooses. No location sharing. No digital purchases. Show me the answers before you submit.
-- Target audience and content: 18 and over only. The app is not designed for children. No appeal to children.
+- Target audience and content: 13 and over (13-15, 16-17, 18 and over). The app is not designed for children under 13. No appeal to children.
 - News app: No. COVID-19 apps: not one. Government app: No. Financial features: none. Health: none. Advertising ID: No, the app does not use the advertising ID.
 - Data safety:
   - Does the app collect or share user data? Yes (only when the user creates an account).
   - Is all data encrypted in transit? Yes.
-  - Can users request deletion? Yes. Deletion URL: https://bodega.polarisworks.duckdns.org/privacy.html
-  - Account creation: the app lets users create an account (with Google). Account deletion URL: https://bodega.polarisworks.duckdns.org/privacy.html
-  - Data types collected (not shared with third parties; it goes only to the developer's own server):
-    - Personal info → Email address: collected, required for an account, purpose "Account management". Not processed ephemerally.
-    - App activity → Other user-generated content (the lists, recipes and weekly menu): collected, optional (only with an account), purpose "App functionality".
-  - Nothing else is collected. No location, no contacts, no device IDs, no crash logs, no analytics.
+  - Can users request deletion? Yes. Deletion URL: https://polaris-works.github.io/bodega/delete-account.html
+  - Account creation: the app lets users create an account (with Google). Account deletion URL: https://polaris-works.github.io/bodega/delete-account.html. In-app deletion: Ajustes → Cuenta → Eliminar cuenta (ACC-14).
+  - Data types collected (not shared with third parties; Hetzner, Google and GitHub act only as service providers). All are optional, since the account is optional, and none is processed ephemerally:
+    - Personal info → Email address: purposes "Account management" and "App functionality" (the invite email of a share).
+    - Personal info → Name: purpose "Account management".
+    - Personal info → User IDs (the Google account ID and the user ID of the server): purpose "Account management".
+    - Personal info → Other info (the Google profile photo): purpose "Account management". Drop this line if the server stops storing the photo.
+    - App activity → Other user-generated content (the lists, recipes, weekly menu, shops and sections): purpose "App functionality".
+    - Device or other IDs (the sign-in fingerprint of the server): purpose "Fraud prevention, security, and compliance". Drop this line if the server turns off its sign-in alerts.
+  - Nothing else is collected. No location, no contacts, no crash logs, no diagnostics, no analytics.
   - Show me the summary before you submit.
 
 ## 4. Closed test (Test and release → Testing → Closed testing)
