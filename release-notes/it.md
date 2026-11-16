@@ -4,6 +4,10 @@ Cosa cambia per te in ogni versione dell’app. La versione più recente viene p
 
 ## Unreleased
 
+No change.
+
+## 1.13.11 - 2026-11-16
+
 - **Impostazioni → Account** ha **Elimina account**, che elimina l’account e i suoi dati dal server, e **Privacy**, che apre l’informativa sulla privacy.
 
 ## 1.13.10 - 2026-11-15

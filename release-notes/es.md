@@ -4,6 +4,10 @@ Lo que cambia para ti en cada versión de la app. La versión más nueva va prim
 
 ## Unreleased
 
+No change.
+
+## 1.13.11 - 2026-11-16
+
 - **Ajustes → Cuenta** tiene **Eliminar cuenta**, que borra tu cuenta y sus datos del servidor, y **Privacidad**, que abre la política de privacidad.
 
 ## 1.13.10 - 2026-11-15

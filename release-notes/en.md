@@ -4,6 +4,10 @@ What changes for you in each version of the app. The newest version is first.
 
 ## Unreleased
 
+No change.
+
+## 1.13.11 - 2026-11-16
+
 - **Settings → Account** has **Delete account**, which deletes your account and its data from the server, and **Privacy**, which opens the privacy policy.
 
 ## 1.13.10 - 2026-11-15

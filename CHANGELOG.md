@@ -10,6 +10,10 @@ no change has no entry.
 
 ## Unreleased
 
+No change.
+
+## 1.13.11 - 2026-11-16
+
 - ACC-14: **Eliminar cuenta** in the group **Cuenta** of `Ajustes`. It asks `account.deleteAsk`, offers
   an export, refreshes the token and sends `DELETE /api/collections/users/records/<id>`
   (`deleteUser` of `src/pocketbase.js`); the server cascades to the records, the shares and the

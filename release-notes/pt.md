@@ -4,6 +4,10 @@ O que muda para si em cada versão da app. A versão mais recente vem primeiro.
 
 ## Unreleased
 
+No change.
+
+## 1.13.11 - 2026-11-16
+
 - **Definições → Conta** tem **Eliminar conta**, que apaga a sua conta e os seus dados do servidor, e **Privacidade**, que abre a política de privacidade.
 
 ## 1.13.10 - 2026-11-15
