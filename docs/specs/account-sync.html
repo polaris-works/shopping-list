@@ -515,7 +515,7 @@ html[data-layout="spec"] #fuentes-body > ul li + li, html[data-layout="spec"] #f
 <div class="shell">
 <nav class="toc" aria-label="Contents"><p class="toc-title"></p><ol></ol></nav>
 <main>
-<div class="stamp">Verificado<time datetime="2026-11-13">2026-11-13</time></div>
+<div class="stamp">Verificado<time datetime="2026-11-16">2026-11-16</time></div>
 <header class="masthead">
   <p class="kicker">Especificación de funcionalidad</p>
   <h1>Cuenta y sincronización</h1>
@@ -523,7 +523,7 @@ html[data-layout="spec"] #fuentes-body > ul li + li, html[data-layout="spec"] #f
     <div><dt>Estado</dt><dd>en uso</dd></div>
     <div><dt>Responsable</dt><dd>Polaris Works</dd></div>
     <div><dt>Código</dt><dd><code>src/session.js</code>, <code>src/syncer.js</code>, <code>src/sync.js</code>, <code>src/pocketbase.js</code>, <code>src/config.js</code>, <code>src/ui/account.js</code>, <code>tests/syncer.test.js</code></dd></div>
-    <div><dt>Reglas</dt><dd><a href="../spec/18-account-sync.md"><code>docs/spec/18-account-sync.md</code></a> (ACC-1 a ACC-13, SYNC-1 a SYNC-11)</dd></div>
+    <div><dt>Reglas</dt><dd><a href="../spec/18-account-sync.md"><code>docs/spec/18-account-sync.md</code></a> (ACC-1 a ACC-15, SYNC-1 a SYNC-11)</dd></div>
   </dl>
 </header>
 
@@ -559,6 +559,7 @@ html[data-layout="spec"] #fuentes-body > ul li + li, html[data-layout="spec"] #f
 
 <h3 id="cambio-de-usuario">Cambio de usuario y cierre de sesión</h3>
 <p>Un inicio de sesión de otro usuario que el dueño de los datos guardados borra antes los datos locales y la cola del anterior; nunca una preferencia del dispositivo. Con la cola llena, la app ofrece antes exportar (<code>account.exportAsk</code>). Una cola sin dueño guardado cuenta como cola de otro usuario (ACC-8). <strong>Cerrar sesión</strong> con conexión envía primero la cola y después borra los datos, la cola y el token. Si la cola sigue llena, la app pregunta <code>account.logoutAsk</code>: un no cancela el cierre; un sí ofrece exportar (<code>account.logoutExport</code>) y después borra (ACC-9). En <code>Ajustes</code>, el grupo <strong>Cuenta</strong> muestra el correo, la hora de la última sincronización y <strong>Cerrar sesión</strong>; sin sesión muestra <strong>Inicia sesión para sincronizar</strong> (ACC-10).</p>
+<p>Con sesión, el grupo <strong>Cuenta</strong> tiene también <strong>Eliminar cuenta</strong>. La app pregunta <code>account.deleteAsk</code>: la cuenta, sus datos y la misma cuenta en las otras apps del servidor se borran para siempre. Un no no cambia nada. Un sí ofrece exportar (<code>account.deleteExport</code>); después la app renueva el token y borra el usuario en el servidor (<code>DELETE</code> de <code>users/&lt;id&gt;</code>). El servidor borra con él los registros, las listas compartidas y las filas de acceso del usuario. Solo cuando el servidor acepta el borrado, la app borra los datos locales, la cola y la sesión como en un cierre de sesión, y muestra <strong>Iniciar sesión</strong> y el aviso <code>account.deleted</code> (ACC-14). Con o sin sesión, <strong>Privacidad</strong> abre la política de privacidad, <code>https://polaris-works.github.io/bodega/privacy.html</code>, en una pestaña nueva. La política enlaza la forma de borrar la cuenta sin la app (ACC-15).</p>
 
 <h3 id="registros">Registros y cola</h3>
 <p>El servidor guarda un registro por artículo, receta, comida del menú y ajustes, en cada espacio (SHARE-1). Un registro tiene <code>owner</code>, <code>kind</code> (<code>item</code>, <code>recipe</code>, <code>meal</code> o <code>settings</code>), <code>key</code>, <code>data</code>, <code>deleted</code> y <code>updated</code>. La clave de una comida es <code>&lt;semana&gt;-&lt;día&gt;-&lt;comida&gt;</code>, por ejemplo <code>2026-11-02-0-lunch</code> (SYNC-1). Cada guardado se compara con el último estado que conoce la sincronización, y las altas y bajas van a la cola de <code>shopping.queue</code> (SYNC-2). Un estado que no tiene ninguno de los artículos y recetas de la cuenta desde el arranque no los borra: la app registra el rechazo y no encola nada. Un cambio en cola gana sobre un registro descargado del mismo <code>kind</code> y <code>key</code> (SYNC-5). Una baja es un registro con <code>deleted: true</code>, que conserva su <code>data</code> (SYNC-6).</p>
@@ -587,6 +588,7 @@ html[data-layout="spec"] #fuentes-body > ul li + li, html[data-layout="spec"] #f
   <li><strong>No se puede guardar <code>shopping.v1.beforeLogin</code>.</strong> El inicio de sesión se para y el estado local se queda (SYNC-8).</li>
   <li><strong>Un 429.</strong> No cuenta como sin conexión: la nota no aparece, y el reintento envía la cola (SYNC-11).</li>
   <li><strong>Un teléfono que no envía <code>online</code> tras el modo avión.</strong> Una sincronización que llega al servidor quita la nota y abre el canal otra vez (SYNC-11).</li>
+  <li><strong>Un borrado de cuenta que falla.</strong> No cambia nada en el dispositivo. Sin red, con un error del servidor o con un 429, la app muestra <code>account.error.network</code>; con un error de autenticación, <code>account.error.google</code> (ACC-14).</li>
   <li><strong>Un almacenamiento que rechaza la marca sin cuenta.</strong> <strong>Usar sin cuenta</strong> cierra igualmente <strong>Iniciar sesión</strong> (ACC-13).</li>
 </ul>
 
@@ -616,16 +618,17 @@ html[data-layout="spec"] #fuentes-body > ul li + li, html[data-layout="spec"] #f
 <div class="tablewrap"><table class="changelog" data-plain>
   <thead><tr><th>Fecha</th><th>Cambio</th><th>Por qué</th></tr></thead>
   <tbody>
+    <tr><td>2026-11-16</td><td>Eliminar cuenta y Privacidad en el grupo Cuenta (ACC-14, ACC-15)</td><td>Google Play pide borrar la cuenta desde la app y una política de privacidad propia</td></tr>
     <tr><td>2026-11-13</td><td>Especificación inicial</td><td>—</td></tr>
   </tbody>
 </table></div>
 
 <h2 id="fuentes">Fuentes</h2>
 <ul>
-  <li><b>Reglas</b> <a href="../spec/18-account-sync.md"><code>docs/spec/18-account-sync.md</code></a> (ACC-1 a ACC-13, SYNC-1 a SYNC-11); referencias a PROD-7, STORE-5, BACKUP-5, BACKUP-7, NAV-25 y SHARE-1, SHARE-6</li>
+  <li><b>Reglas</b> <a href="../spec/18-account-sync.md"><code>docs/spec/18-account-sync.md</code></a> (ACC-1 a ACC-15, SYNC-1 a SYNC-11); referencias a PROD-7, STORE-5, BACKUP-5, BACKUP-7, NAV-25 y SHARE-1, SHARE-6</li>
   <li><b>Código</b> <code>src/config.js</code>, <code>src/session.js</code>, <code>src/sync.js</code>, <code>src/syncer.js</code>, <code>src/pocketbase.js</code>, <code>src/ui/account.js</code>, <code>src/app.js</code>, <code>src/storage.js</code>, <code>src/locales/es.js</code></li>
   <li><b>Registros</b> <code>docs/superpowers/specs/2026-10-24-account-sync-deploy-design.md</code>, <code>docs/superpowers/specs/2026-10-25-google-or-offline-design.md</code></li>
-  <li><b>Commit</b> <code>main</code> @ <code>f20b6d3</code>, leído el 2026-11-13</li>
+  <li><b>Commit</b> <code>main</code> @ <code>067d904</code>, leído el 2026-11-16</li>
   <li><b>Ejecutado</b> nada: ni tests ni comprobación en el navegador; cada sección se ha leído de las reglas y del código</li>
   <li><b>Abierto</b> ninguno</li>
 </ul>
