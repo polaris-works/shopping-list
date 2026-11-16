@@ -69,10 +69,8 @@ Store settings (Store presence → Store settings):
     - Personal info → Email address: purposes "Account management" and "App functionality" (the invite email of a share).
     - Personal info → Name: purpose "Account management".
     - Personal info → User IDs (the Google account ID and the user ID of the server): purpose "Account management".
-    - Personal info → Other info (the Google profile photo): purpose "Account management". Drop this line if the server stops storing the photo.
     - App activity → Other user-generated content (the lists, recipes, weekly menu, shops and sections): purpose "App functionality".
-    - Device or other IDs (the sign-in fingerprint of the server): purpose "Fraud prevention, security, and compliance". Drop this line if the server turns off its sign-in alerts.
-  - Nothing else is collected. No location, no contacts, no crash logs, no diagnostics, no analytics.
+  - Nothing else is collected. No profile photo and no device IDs (pwa-server migration 21). No location, no contacts, no crash logs, no diagnostics, no analytics.
   - Show me the summary before you submit.
 
 ## 4. Closed test (Test and release → Testing → Closed testing)
